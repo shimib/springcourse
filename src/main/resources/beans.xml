@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-4.3.xsd">
+
+	<bean id="empGen" class="com.example.demo.model.EmployeeGenerator" />
+
+
+	<int:inbound-channel-adapter channel="extract"
+		id="in" ref="empGen" method="generateEmps">
+		<int:poller fixed-rate="1000" max-messages-per-poll="1" />
+	</int:inbound-channel-adapter>
+
+	<int:channel id="extract" />
+	
+	<int:splitter input-channel="extract" output-channel="transform" />
+	
+	<int:channel id="transform">
+		<int:dispatcher task-executor="tp" />
+	</int:channel>
+	
+	<int:transformer input-channel="transform"
+		output-channel="c2" ref="myFilter" method="getSalary" />
+
+	<task:executor id="tp" pool-size="10" />
+
+	<bean id="myFilter" class="com.example.demo.model.IsUppercase" />
+
+
+	<int:channel id="c1">
+		<int:dispatcher task-executor="tp" />
+	</int:channel>
+
+	<int:channel id="c2" datatype="int">
+		<!-- >int:dispatcher task-executor="tp"/ -->
+	</int:channel>
+
+	<int:filter input-channel="c2" output-channel="c1" ref="myFilter"
+		method="isNegative" />
+
+
+
+</beans>
