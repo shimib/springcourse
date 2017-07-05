@@ -13,7 +13,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.SubscribableChannel;
 
 @SpringBootApplication
-@ImportResource("beans.xml")
+@ImportResource("ex1.xml")
 public class Showintergration1Application {
 
 	
@@ -22,8 +22,8 @@ public class Showintergration1Application {
 		
 		
 //		SubscribableChannel qc = factory.getBean("c2", SubscribableChannel.class);
-		SubscribableChannel qc1 = factory.getBean("c1", SubscribableChannel.class);
-		qc1.subscribe(System.out::println);
+//		SubscribableChannel qc1 = factory.getBean("c1", SubscribableChannel.class);
+	//	qc1.subscribe(System.out::println);
 		/**
 		
 		

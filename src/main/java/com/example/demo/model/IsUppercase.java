@@ -8,4 +8,15 @@ public class IsUppercase {
 	public boolean isNegative(int num) {
 		return num < 0;
 	}
-}
+	
+	public boolean isAbove50000(Employee e) {
+		return e.getSalary() > 50000;
+	}
+	public String getName(Employee e) {
+		return e.getId();
+	}
+	
+	public void printIt(Object o) {
+		System.out.println("Got: " + o);
+	}
+ }

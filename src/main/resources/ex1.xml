@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:int-file="http://www.springframework.org/schema/integration/file"
+	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file-4.3.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-4.3.xsd">
+
+	<bean id="empGen" class="com.example.demo.model.EmployeeGenerator" />
+	<!-- bean id="comp2emps" class="com.example.demo.model.CompnayToEmps" /-->
+
+	<int:inbound-channel-adapter channel="extract"
+		id="in" ref="empGen" method="genCompany">
+		<int:poller fixed-rate="10000" max-messages-per-poll="1" />
+	</int:inbound-channel-adapter>
+
+
+
+
+	<int:channel id="extract" datatype="com.example.demo.model.Company" />
+
+	<int:chain input-channel="extract" >
+		<int:splitter expression="payload.emps" />
+		<int:filter expression="payload.salary &gt; 50000"/>
+		<int:transformer expression="payload.id" />
+		<int:outbound-channel-adapter ref="myFilter" method="printIt" />
+	</int:chain>
+
+
+	<!-- int:splitter input-channel="extract" output-channel="transform"
+		ref="comp2emps" method="getEmps" /-->
+	
+<!-- int:splitter input-channel="extract" output-channel="transform"
+		expression="payload.emps" /-->
+	<int:channel id="transform" datatype="com.example.demo.model.Employee">
+		<int:dispatcher task-executor="tp" />
+	</int:channel>
+
+	<!-- int:filter input-channel="transform" output-channel="c2"
+		ref="myFilter" method="isAbove50000" /-->
+	
+
+	<task:executor id="tp" pool-size="10" />
+
+	<bean id="myFilter" class="com.example.demo.model.IsUppercase" />
+
+
+	<int:channel id="c1" datatype="java.lang.String">
+		<int:dispatcher task-executor="tp" />
+	</int:channel>
+
+	
+
+	<int:channel id="c2" datatype="com.example.demo.model.Employee">
+	</int:channel>
+
+	<!-- int:transformer input-channel="c2" output-channel="c1"
+		ref="myFilter" method="getName" /-->
+	
+
+
+
+</beans>
