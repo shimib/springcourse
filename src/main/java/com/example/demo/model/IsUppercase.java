@@ -1,6 +1,13 @@
 package com.example.demo.model;
 
+import fj.data.List;
+
 public class IsUppercase {
+	
+	public List<String> byNewLine(String content) {
+		return List.arrayList(content.split("\\n"));
+	}
+	
 	public int getSalary(Employee e) {
 		return e.getSalary();
 	}

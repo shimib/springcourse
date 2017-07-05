@@ -13,7 +13,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.SubscribableChannel;
 
 @SpringBootApplication
-@ImportResource("ex1.xml")
+@ImportResource("ex2.xml")
 public class Showintergration1Application {
 
 	

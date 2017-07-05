@@ -17,7 +17,7 @@
 		<int:poller fixed-rate="10000" max-messages-per-poll="1" />
 	</int:inbound-channel-adapter>
 
-
+	<int-file:inbound-channel-adapter directory="" ></int-file:inbound-channel-adapter>
 
 
 	<int:channel id="extract" datatype="com.example.demo.model.Company" />
